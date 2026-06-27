@@ -7,6 +7,9 @@ export interface SignupPayload {
   freelance_type: string
   pain_point: string
   current_tool: string
+  utm_source?: string
+  utm_medium?: string
+  utm_campaign?: string
 }
 
 export interface SignupResult {

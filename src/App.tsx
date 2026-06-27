@@ -14,9 +14,19 @@ import Footer from './components/Footer'
 import type { WaitlistData } from './components/WaitlistForm'
 import { joinWaitlist, getWaitlistCount } from './api'
 
+function useUtmParams() {
+  const params = new URLSearchParams(window.location.search)
+  return {
+    utm_source: params.get('utm_source') ?? '',
+    utm_medium: params.get('utm_medium') ?? '',
+    utm_campaign: params.get('utm_campaign') ?? '',
+  }
+}
+
 export default function App() {
   const formRef = useRef<HTMLDivElement | null>(null)
   const [waitlistCount, setWaitlistCount] = useState(214)
+  const utmParams = useUtmParams()
 
   useEffect(() => {
     getWaitlistCount().then(count => {
@@ -32,6 +42,7 @@ export default function App() {
       freelance_type: data.freelanceType,
       pain_point: data.painPoint,
       current_tool: data.currentTool,
+      ...utmParams,
     })
     setWaitlistCount(result.count)
   }

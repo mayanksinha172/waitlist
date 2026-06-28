@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import ScrollProgressBar from './components/ScrollProgressBar'
-import CustomCursor from './components/CustomCursor'
 import PageLoader from './components/PageLoader'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
@@ -52,8 +51,7 @@ export default function App() {
 
   return (
     <>
-      <CustomCursor />
-      <PageLoader onDone={() => setLoaded(true)} />
+<PageLoader onDone={() => setLoaded(true)} />
 
       <div
         className="min-h-screen font-body"

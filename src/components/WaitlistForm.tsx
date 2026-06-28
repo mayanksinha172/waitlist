@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, CheckCircle, ChevronRight, ChevronLeft, Loader2 } from 'lucide-react'
+import MagneticButton from './MagneticButton'
 
 export interface WaitlistData {
   name: string
@@ -160,10 +161,10 @@ export default function WaitlistForm({ source, onSignup }: WaitlistFormProps) {
                 onFocus={e => { e.currentTarget.style.borderColor = 'rgba(17,255,153,0.4)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(17,255,153,0.06)' }}
                 onBlur={e => { e.currentTarget.style.borderColor = 'rgba(237,240,255,0.09)'; e.currentTarget.style.boxShadow = 'none' }}
               />
-              <button type="submit" className="btn-primary h-[44px] flex-shrink-0">
+              <MagneticButton type="submit" className="btn-primary h-[44px] flex-shrink-0">
                 Next
                 <ChevronRight className="w-3.5 h-3.5" />
-              </button>
+              </MagneticButton>
             </div>
           </motion.form>
         )}
@@ -256,7 +257,7 @@ export default function WaitlistForm({ source, onSignup }: WaitlistFormProps) {
                   })}
                 </div>
               )}
-              <button
+              <MagneticButton
                 type="submit"
                 disabled={!step2Ready || loading}
                 className="btn-primary w-full h-[44px] font-ui justify-center"
@@ -273,7 +274,7 @@ export default function WaitlistForm({ source, onSignup }: WaitlistFormProps) {
                     <ArrowRight className="w-3.5 h-3.5" />
                   </>
                 )}
-              </button>
+              </MagneticButton>
             </div>
           </motion.form>
         )}

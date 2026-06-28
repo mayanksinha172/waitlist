@@ -1,6 +1,8 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Shield, FileText, CreditCard, RefreshCw, Brain, Globe } from 'lucide-react'
+import Tilt3D from './Tilt3D'
+import { useTextScramble } from '../lib/useTextScramble'
 
 const features = [
   {
@@ -52,59 +54,68 @@ const features = [
 function FeatureCell({ f, index }: { f: typeof features[0]; index: number }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-50px' })
+  const scrambled = useTextScramble(f.title, inView, 600)
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, delay: index * 0.07, ease: [0.16, 1, 0.3, 1] }}
-      className={`${f.span} surface-card card-hover p-8 flex flex-col gap-5 relative overflow-hidden`}
+      initial={{ opacity: 0, y: 30, scale: 0.96 }}
+      animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+      transition={{ duration: 0.65, delay: index * 0.07, ease: [0.16, 1, 0.3, 1] }}
+      className={f.span}
     >
-      {/* Subtle top accent */}
-      <div
-        className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: `linear-gradient(90deg, transparent, ${f.accent}30, transparent)` }}
-      />
-
-      <div
-        className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-        style={{
-          background: `${f.accent}10`,
-          border: `1px solid ${f.accent}25`,
-        }}
+      <Tilt3D
+        className="surface-card holo-card p-8 flex flex-col gap-5 h-full relative overflow-hidden"
+        intensity={6}
       >
-        <f.icon className="w-5 h-5" style={{ color: f.accent }} />
-      </div>
+        {/* Top accent line */}
+        <motion.div
+          className="absolute top-0 left-0 right-0 h-px"
+          style={{ background: `linear-gradient(90deg, transparent, ${f.accent}55, transparent)` }}
+          initial={{ scaleX: 0 }}
+          animate={inView ? { scaleX: 1 } : { scaleX: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 + index * 0.07, ease: [0.16, 1, 0.3, 1] }}
+        />
 
-      <div>
-        <h3
-          className={`font-display mb-2.5 ${f.big ? 'text-2xl' : 'text-xl'}`}
-          style={{ color: '#EDF0FF', lineHeight: 1.15, letterSpacing: '-0.02em' }}
+        {/* Icon */}
+        <motion.div
+          className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+          style={{ background: `${f.accent}12`, border: `1px solid ${f.accent}28` }}
+          whileHover={{ scale: 1.1, rotate: [0, -8, 8, 0] }}
+          transition={{ duration: 0.4 }}
         >
-          {f.title}
-        </h3>
-        <p
-          className={`font-marketing leading-relaxed ${f.big ? 'text-base' : 'text-sm'}`}
-          style={{ color: 'rgba(237,240,255,0.45)' }}
-        >
-          {f.description}
-        </p>
-      </div>
+          <f.icon className="w-5 h-5" style={{ color: f.accent }} />
+        </motion.div>
 
-      {f.big && (
-        <div className="mt-auto pt-4" style={{ borderTop: '1px solid rgba(237,240,255,0.06)' }}>
-          <div className="flex items-center gap-2">
-            <span
-              className="w-1.5 h-1.5 rounded-full animate-glow-pulse"
-              style={{ background: '#11ff99', boxShadow: '0 0 6px rgba(17,255,153,0.8)' }}
-            />
-            <span className="font-mono text-[10px] tracking-wider" style={{ color: 'rgba(237,240,255,0.3)' }}>
-              Runs automatically on every client message
-            </span>
-          </div>
+        <div>
+          <h3
+            className={`font-display mb-2.5 ${f.big ? 'text-2xl' : 'text-xl'}`}
+            style={{ color: '#EDF0FF', lineHeight: 1.15, letterSpacing: '-0.02em' }}
+          >
+            {scrambled}
+          </h3>
+          <p
+            className={`font-marketing leading-relaxed ${f.big ? 'text-base' : 'text-sm'}`}
+            style={{ color: 'rgba(237,240,255,0.42)' }}
+          >
+            {f.description}
+          </p>
         </div>
-      )}
+
+        {f.big && (
+          <div className="mt-auto pt-4" style={{ borderTop: '1px solid rgba(237,240,255,0.06)' }}>
+            <div className="flex items-center gap-2">
+              <span
+                className="w-1.5 h-1.5 rounded-full animate-glow-pulse"
+                style={{ background: '#11ff99', boxShadow: '0 0 6px rgba(17,255,153,0.9)' }}
+              />
+              <span className="font-mono text-[10px] tracking-wider" style={{ color: 'rgba(237,240,255,0.3)' }}>
+                Runs automatically on every client message
+              </span>
+            </div>
+          </div>
+        )}
+      </Tilt3D>
     </motion.div>
   )
 }
@@ -112,12 +123,13 @@ function FeatureCell({ f, index }: { f: typeof features[0]; index: number }) {
 export default function BentoFeatures() {
   const titleRef = useRef(null)
   const inView = useInView(titleRef, { once: true, margin: '-80px' })
+  const scrambled = useTextScramble('Everything you need to protect your income.', inView, 900)
 
   return (
     <section className="relative py-24 lg:py-32 px-6 overflow-hidden">
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse 65% 55% at 50% 50%, rgba(64,128,255,0.12) 0%, transparent 70%)' }}
+        style={{ background: 'radial-gradient(ellipse 65% 55% at 50% 50%, rgba(64,128,255,0.11) 0%, transparent 70%)' }}
       />
 
       <div className="max-w-6xl mx-auto">
@@ -135,7 +147,7 @@ export default function BentoFeatures() {
             className="font-display mb-5"
             style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', lineHeight: 1.05, letterSpacing: '-0.025em', color: '#EDF0FF' }}
           >
-            Everything you need to protect your income.
+            {scrambled}
           </h2>
         </motion.div>
 
